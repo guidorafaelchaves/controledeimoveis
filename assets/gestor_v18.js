@@ -128,6 +128,26 @@ function genericLegal(p){
  if(!has(p.registrationNumber))html+='<p class="v18-inline-note">A ausência da matrícula impede confirmar a titularidade registral ou a cadeia de transmissões.</p>';
  return html;
 }
+
+function financeExtra(p){
+ const s=src(p),h=O(s.avaliacoes),rows=[];
+ for(const [label,key] of [["Terreno IRPF (2021)","valor_terreno_irpf_2021_reais"],["Obra IRPF (2021)","valor_obra_irpf_2021_reais"],["Total IRPF (2021)","total_terreno_obra_irpf_2021_reais"]]){
+  if(has(h[key]))rows.push(field(label,Number(h[key]).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})));
+ }
+ let html=rows.length?'<div class="v18-inline-note">Valores históricos informados em declaração: não representam preço atual de venda, valor venal ou valor do débito.</div><div class="v18-introgrid">'+rows.join("")+'</div>':"";
+ const groups=[["Lançamentos financeiros",p.finances],["Tributos cadastrados",p.taxes],["Contratos",p.contracts],["Contas de consumo",p.utilities]];
+ for(const [label,arr] of groups){
+  if(!A(arr).length)continue;
+  html+='<h3 style="font-size:12px;margin:14px 0 6px;color:#28586b">'+E(label)+'</h3>';
+  html+=A(arr).map(row=>{
+   const x=typeof row==="string"?{descricao:row}:O(row);
+   const title=x.title||x.descricao||x.kind||x.tipo||"Registro";
+   const detail=[x.data||x.date,x.amount||x.valor,x.status,x.notes||x.observacoes].filter(has).map(v=>String(v)).join(" · ");
+   return '<p class="v18-data-note" style="margin:5px 0"><b>'+E(title)+'</b> · '+E(detail||JSON.stringify(x))+'</p>';
+  }).join("");
+ }
+ return html;
+}
 function historyExtras(p){
  const s=src(p);
  const extra=[...A(s.linha_do_tempo),...A(s.averbacoes_e_registros),...A(s.registros_e_averbacoes)];
@@ -153,7 +173,7 @@ function propertyView(p){
  block("cadastro","Cadastro e descrição","",cadastral(p))+
  block("unidades","Unidades do imóvel","Visão completa, inclusive inscrição e IPTU por unidade",units(p))+
  block("fiscal","Tributos e situação fiscal","Cobranças sem confirmação permanecem identificadas como não verificadas",fromV17(p,"fiscal"))+
- block("financeiro","Valores, receitas e despesas","Dados históricos separados de avaliação de mercado",fromV17(p,"financeiro"))+
+ block("financeiro","Valores, receitas e despesas","Dados históricos separados de avaliação de mercado",fromV17(p,"financeiro")+financeExtra(p))+
  block("juridico","Titularidade e histórico jurídico","",legal)+
  block("pendencias","Riscos, pendências e providências","",fromV17(p,"riscos"))+
  block("documentos","Documentos e fontes","Evidências e referências reunidas na própria página",fromV17(p,"documentos"))+
@@ -165,20 +185,21 @@ function propertyView(p){
 function portfolioView(){
  const ps=A(state.properties),withValue=ps.filter(p=>Number(p.marketValue)>0);
  const sum=withValue.reduce((acc,p)=>acc+Number(p.marketValue),0);
+ const rental=ps.reduce((acc,p)=>acc+(Number(p.monthlyIncome)||0),0), expenses=ps.reduce((acc,p)=>acc+(Number(p.monthlyCost)||0),0);
  const pending=ps.filter(p=>!p.registrationNumber||!p.municipalRegistration).length;
  const head='<div class="v18-portfolio-head"><div class="v18-eyebrow">Carteira patrimonial</div>'+
    '<h1>'+ps.length+' imóveis cadastrados</h1>'+
    '<p class="v18-data-note">'+withValue.length+' com avaliação de mercado · '+pending+
-   ' com matrícula ou inscrição municipal pendente · Mercado informado: '+(withValue.length?curr(sum):"Não apurado")+'</p></div>';
+   ' com matrícula ou inscrição municipal pendente · Mercado informado: '+(withValue.length?curr(sum):"Não apurado")+' · Receitas cadastradas: '+(rental?curr(rental):"Não apuradas")+' · Custos cadastrados: '+(expenses?curr(expenses):"Não apurados")+'</p></div>';
  const rows=ps.map(p=>'<tr><td><strong>'+E(p.name||"Imóvel")+'</strong>'+
    '<div class="v18-data-note">'+E(p.address||p.city||"")+'</div></td>'+
-   '<td>'+txt(p.type||p.city)+'</td><td>'+txt(p.registrationNumber,"Pendente")+'</td>'+
+   '<td>'+txt(p.type||p.city)+'</td><td>'+txt(p.legalStatus,"Não informado")+'</td><td>'+txt(p.registrationNumber,"Pendente")+'</td>'+
    '<td>'+txt(p.municipalRegistration,"Pendente")+'</td>'+
    '<td>'+curr(p.marketValue)+'</td>'+
    '<td><button class="v18-text-action" onclick="selectProperty(\''+E(p.id)+'\')">Abrir</button></td></tr>').join("");
  return head+'<div class="v18-section"><div class="v18-inline-action"><strong style="font-size:14px">Lista de imóveis</strong>'+
    '<button class="v18-text-action" onclick="openImport()">+ Importar imóvel</button></div>'+
-   (ps.length?'<div style="overflow:auto"><table class="v18-portfolio-table"><thead><tr><th>Imóvel</th><th>Tipo</th><th>Matrícula</th><th>Inscrição municipal</th><th>Valor de mercado</th><th></th></tr></thead><tbody>'+
+   (ps.length?'<div style="overflow:auto"><table class="v18-portfolio-table"><thead><tr><th>Imóvel</th><th>Tipo</th><th>Situação jurídica</th><th>Matrícula</th><th>Inscrição municipal</th><th>Valor de mercado</th><th></th></tr></thead><tbody>'+
    rows+'</tbody></table></div>':'<p class="v18-data-note">Sem imóveis cadastrados neste navegador. Importe um arquivo JSON para começar.</p>')+'</div>';
 }
 renderProperty=function(p){
