@@ -97,3 +97,10 @@ button{transition:color .12s,background .12s}button:hover{transform:none}
 @media(max-width:1000px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative;padding:12px 16px}.brand p{display:none}.property-list{display:flex;gap:6px;overflow:auto}.prop-tab{white-space:nowrap;border:1px solid rgba(255,255,255,.13);border-radius:8px;padding:7px 10px}.prop-tab.active{padding-left:10px;border-left:1px solid rgba(255,255,255,.13)}.prop-tab small,.filters,.prop-tab .tab-meta{display:none}.side-actions{max-width:360px}.main{padding:16px 20px}.topbar{flex-wrap:wrap}}
 @media(max-width:760px){.v18-facts{grid-template-columns:repeat(2,minmax(0,1fr))}.v18-introgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.v18-all .v17-two{grid-template-columns:1fr}.v18-all .v17-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v18-all .v17-statgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.v18-heading h1{font-size:25px}.v18-introgrid{grid-template-columns:1fr 1fr;gap:9px}.v18-facts{gap:10px}.toolbar{justify-content:flex-start}.main{padding:12px}.v18-section{padding:18px 0}.v18-all .v17-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Eliminar a duplicação do título e controles supérfluos da coluna de navegação. */
+.topbar>div:first-child{display:none}
+.topbar{justify-content:flex-end;margin-bottom:7px;min-height:25px}
+.filters{display:none}
+.v18-all .v17-btn.light{color:#1b6475;background:transparent;border:0;padding:4px 1px;text-decoration:underline;text-underline-offset:3px}
+.v18-all .v17-btn.light:hover{color:#083d50;background:transparent}
