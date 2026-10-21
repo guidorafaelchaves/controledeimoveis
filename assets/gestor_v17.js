@@ -104,10 +104,10 @@
       safeLink(c.mensagem,"Abrir mensagem original"):'<div class="empty">Não há lançamento municipal confirmado no cadastro.</div>')+
       '</div>'+
       '<div class="v17-surface"><h3>Plano de conferência</h3><div class="v17-stack">'+
-      line("1. Identificar as unidades","Solicitar à SEFIN o espelho CADIMO para 701 e 701-A e os números de inscrição e sequencial de cada unidade.","Alta")+
+      line("1. Identificar a inscrição cadastral","Consultar no município o cadastro fiscal de "+(p.address||p.name)+" e as inscrições individualizadas, se existentes.","Alta")+
       line("2. Extrair os débitos","Emitir extrato de débitos individualizado por inscrição e competência; apurar pagamentos e eventuais prescrições.","Alta")+
-      line("3. Vincular cobrança ao cadastro","Comparar R$ 3.650,77 ao extrato oficial antes de negociação ou DAM.","Alta")+
-      '</div><div class="v17-actions" style="margin-top:12px">'+safeLink("https://garanhuns.pe.gov.br/sefin/","Abrir SEFIN Garanhuns")+'</div></div>';
+      line("3. Vincular cobranças ao cadastro","Comparar eventuais cobranças ao extrato oficial antes de negociação ou emissão de DAM.","Alta")+
+      '</div><div class="v17-actions" style="margin-top:12px">'+(String(p.city||"").toLowerCase().includes("garanhuns")?safeLink("https://garanhuns.pe.gov.br/sefin/","Abrir SEFIN Garanhuns"):(t.portal_consulta?safeLink(t.portal_consulta,"Portal municipal indicado"):""))+'</div></div>';
   }
   function sectionLegal(p){
     const d=q(p),t=obj(d.tax.eventual_doacao_de_2022),reg=d.reg;
@@ -134,6 +134,26 @@
     const updates=list(p.evidenceLog).map(x=>line(x.title||x.type,x.at||"Evidência preservada","Histórico de importação"));
     return (rows.concat(updates)).join("")||'<div class="empty">Não há fontes registradas.</div>';
   }
+  function sectionTasks(p){
+    const s=src(p),risk=[...list(p.risks),...list(s.riscos)],pending=[...list(p.regularization),...list(s.pendencias)],acts=[...list(p.tasks),...list(s.providencias)];
+    function unique(xs){const seen=new Set();return xs.filter(x=>{const y=obj(x),key=clean(y.descricao||y.acao||y.title||y.categoria||JSON.stringify(x));if(!key||seen.has(key))return false;seen.add(key);return true;});}
+    const rs=unique(risk),ps=unique(pending),as=unique(acts);
+    const render=arr=>arr.map(x=>line(x.categoria||x.tipo||x.acao||x.title||"Registro",x.descricao||x.acao||x.notes||"Informação cadastrada",x.nivel||x.prioridade||x.status)).join("");
+    return '<div class="v17-two"><div class="v17-surface"><h3>Riscos documentais</h3><div class="v17-stack">'+(render(rs)||'<p class="v17-muted">Sem riscos registrados.</p>')+'</div></div>'+
+      '<div><div class="v17-surface"><h3>Pendências</h3><div class="v17-stack">'+(render(ps)||'<p class="v17-muted">Sem pendências cadastradas.</p>')+'</div></div>'+
+      '<div class="v17-surface"><h3>Providências planejadas</h3><div class="v17-stack">'+(render(as)||'<p class="v17-muted">Sem providências cadastradas.</p>')+'</div></div></div></div>';
+  }
+  function sectionFinance(p){
+    const f=obj(src(p).financeiro),v=Number(p.marketValue||0),income=Number(p.monthlyIncome||f.receita_mensal||0),cost=Number(p.monthlyCost||f.custo_mensal||0);
+    return '<div class="v17-surface"><h3>Gestão financeira</h3><div class="v17-notice">Campos sem documentação ficam como “Não apurado”, e não são computados como renda ou despesa zero. Valores históricos da Receita Federal são mostrados separadamente.</div>'+
+      '<div class="v17-info-grid">'+
+      item("Valor atual de mercado",v?brl(v):"Não avaliado")+
+      item("Receita mensal",income?brl(income):"Não apurada")+
+      item("Despesas mensais",cost?brl(cost):"Não apuradas")+
+      item("Resultado mensal",income&&cost?brl(income-cost):"Não apurado")+
+      item("Meta mensal",Number(p.monthlyGoal)>0?brl(Number(p.monthlyGoal)):"Não informada")+
+      item("Rentabilidade",v&&income&&cost?((income-cost)*12/v*100).toFixed(2)+"% ao ano":"Não apurada")+'</div></div>';
+  }
   function sectionHistory(p){
     const s=src(p), h=list(p.history).length?list(p.history):list(s.linha_do_tempo);
     const e=h.map(x=>line(x.evento||x.tipo||x.ato||x.data||"Evento",x.descricao||x.efeito||x.titulo||"Sem descrição",(x.data||"")+" · "+(x.status||""))).join("");
@@ -148,7 +168,9 @@
       '<div class="v17-surface"><h3>Histórico de importação</h3><div class="v17-stack">'+
       (updates.length?updates.slice().reverse().map(x=>line(x.policy||"Atualização",(x.newFields||0)+" novos campos; "+(x.conflicts||0)+" divergências",x.at)).join(""):'<p class="v17-muted">Nenhuma atualização incremental.</p>')+
       '</div><h3 style="margin-top:16px">Divergências</h3>'+
-      (conf.length?conf.map(x=>line(x.field||"Campo",String(x.currentValue||"")+" / "+String(x.incomingValue||""),x.status)).join(""):'<p class="v17-muted">Sem divergências registradas.</p>')+
+      (conf.length?conf.map(x=>'<div class="v17-entry"><h4>'+escape(x.field||"Campo")+'</h4><p><b>Atual:</b> '+escape(typeof x.currentValue==="object"?JSON.stringify(x.currentValue):x.currentValue)+
+      '<br><b>Recebido:</b> '+escape(typeof x.incomingValue==="object"?JSON.stringify(x.incomingValue):x.incomingValue)+'</p><div class="v17-inline">'+escape(x.status||"Pendente")+'</div>'+
+      ((x.status==="review_required"||x.status==="open"||!x.status)&&x.id?'<div class="v17-actions" style="margin-top:8px"><button class="v17-btn" onclick="resolveConflict(\''+escape(x.id)+'\',\'incoming\')">Aceitar novo</button><button class="v17-btn light" onclick="resolveConflict(\''+escape(x.id)+'\',\'current\')">Manter atual</button></div>':"")+'</div>').join(""):'<p class="v17-muted">Sem divergências registradas.</p>')+
       '</div></div>';
   }
   function sectionJson(p){
@@ -157,12 +179,14 @@
       '</div></div>';
   }
   const tabs=[
-    ["executivo","Visão geral"],["unidades","Unidades"],["fiscal","IPTU e fiscal"],
+    ["executivo","Visão geral"],["unidades","Unidades"],["fiscal","IPTU e fiscal"],["financeiro","Financeiro"],["riscos","Pendências"],
     ["juridico","Jurídico"],["documentos","Documentos"],["historico","Histórico"],
     ["auditoria","Auditoria"],["json","JSON completo"]
   ];
   renderSection=function(p){
     if(section==="unidades")return sectionUnits(p);
+    if(section==="financeiro")return sectionFinance(p);
+    if(section==="riscos")return sectionTasks(p);
     if(section==="fiscal")return sectionFiscal(p);
     if(section==="juridico")return sectionLegal(p);
     if(section==="documentos")return sectionDocs(p);
