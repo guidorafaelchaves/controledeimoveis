@@ -215,9 +215,9 @@ renderPortfolio=function(){
 };
 try{
  const label=document.querySelector(".brand h1");
- if(label)label.textContent="Controle de Imóveis";
+ if(label)label.textContent="Controle de Imóveis v18";
  const intro=document.querySelector(".brand p");
- if(intro)intro.textContent="Documentos, tributos, titularidade e histórico em uma só ficha.";
+ if(intro)intro.textContent="Uma ficha contínua: documentos, tributos, titularidade e histórico.";
  const bar=document.querySelector(".toolbar");
  if(bar){for(const btn of bar.querySelectorAll("button, label")){
   const t=(btn.textContent||"").trim();
