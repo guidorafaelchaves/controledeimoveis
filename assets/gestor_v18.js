@@ -37,7 +37,7 @@ function facts(p){
    '</div>';
 }
 function fact(k,v,foot){return '<div class="v18-fact"><small>'+E(k)+'</small><b>'+E(v)+'</b>'+(foot?'<em>'+E(foot)+'</em>':"")+'</div>';}
-function section(id,title,detail,inner,extraClass=""){
+function block(id,title,detail,inner,extraClass=""){
  return '<section class="v18-section v18-all '+extraClass+'" id="v18-'+E(id)+'">'+
    '<div class="v18-section-title"><h2>'+E(title)+'</h2>'+(detail?'<small>'+E(detail)+'</small>':"")+'</div>'+
    inner+'</section>';
@@ -150,16 +150,16 @@ function propertyView(p){
  const simoa=String(p.name+" "+p.address).toLowerCase().includes("simoa gomes");
  const legal=simoa||Object.keys(problems).length?fromV17(p,"juridico"):genericLegal(p);
  return '<div class="v18-property">'+intro(p)+
- section("cadastro","Cadastro e descrição","",cadastral(p))+
- section("unidades","Unidades do imóvel","Visão completa, inclusive inscrição e IPTU por unidade",units(p))+
- section("fiscal","Tributos e situação fiscal","Cobranças sem confirmação permanecem identificadas como não verificadas",fromV17(p,"fiscal"))+
- section("financeiro","Valores, receitas e despesas","Dados históricos separados de avaliação de mercado",fromV17(p,"financeiro"))+
- section("juridico","Titularidade e histórico jurídico","",legal)+
- section("pendencias","Riscos, pendências e providências","",fromV17(p,"riscos"))+
- section("documentos","Documentos e fontes","Evidências e referências reunidas na própria página",fromV17(p,"documentos"))+
- section("historico","Histórico do imóvel","",fromV17(p,"historico")+historyExtras(p))+
- section("auditoria","Auditoria e divergências","Decisões registradas e conflitos de importação",fromV17(p,"auditoria"))+
- section("integral","Arquivo integral","Todos os campos preservados, mesmo os não utilizados na interface",rawData(p))+
+ block("cadastro","Cadastro e descrição","",cadastral(p))+
+ block("unidades","Unidades do imóvel","Visão completa, inclusive inscrição e IPTU por unidade",units(p))+
+ block("fiscal","Tributos e situação fiscal","Cobranças sem confirmação permanecem identificadas como não verificadas",fromV17(p,"fiscal"))+
+ block("financeiro","Valores, receitas e despesas","Dados históricos separados de avaliação de mercado",fromV17(p,"financeiro"))+
+ block("juridico","Titularidade e histórico jurídico","",legal)+
+ block("pendencias","Riscos, pendências e providências","",fromV17(p,"riscos"))+
+ block("documentos","Documentos e fontes","Evidências e referências reunidas na própria página",fromV17(p,"documentos"))+
+ block("historico","Histórico do imóvel","",fromV17(p,"historico")+historyExtras(p))+
+ block("auditoria","Auditoria e divergências","Decisões registradas e conflitos de importação",fromV17(p,"auditoria"))+
+ block("integral","Arquivo integral","Todos os campos preservados, mesmo os não utilizados na interface",rawData(p))+
  '</div>';
 }
 function portfolioView(){
