@@ -1,0 +1,71 @@
+
+/* Gestor Patrimonial v19: visualização contínua e orientada aos dados, sem cartões ou abas */
+:root{--v19-text:#182938;--v19-muted:#667a88;--v19-rule:#dce3e7;--v19-accent:#12647c}
+body{background:#fff!important;color:var(--v19-text);font-size:14px}
+button:hover{transform:none}
+.app{grid-template-columns:245px minmax(0,1fr)}
+.sidebar{height:100vh;position:sticky;top:0;padding:20px 14px;background:#18313f;color:#eef4f5;overflow:auto;border:0}
+.sidebar .brand{padding:0 6px 16px}
+.sidebar .brand h1{font-size:17px;letter-spacing:-.03em}
+.sidebar .brand p{font-size:11px;color:#c4d2d8;line-height:1.5;margin:8px 0 0}
+.sidebar .side-actions{display:flex;gap:6px;margin-bottom:12px}
+.sidebar .side-actions button{flex:1;padding:7px 6px;border-radius:5px;font-size:11px}
+.sidebar .searchbox{border-radius:5px;padding:9px;margin-bottom:10px;font-size:12px}
+.sidebar .filters{display:none!important}
+.v19-property{padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.14);cursor:pointer;outline:none}
+.v19-property:hover{background:rgba(255,255,255,.06)}
+.v19-property.selected{border-left:3px solid #9ad6d4;padding-left:5px;background:rgba(255,255,255,.075)}
+.v19-property strong{display:block;font-size:12px;line-height:1.4;font-weight:730}
+.v19-property small{display:block;color:#a8bec6;font-size:10px;margin-top:4px}
+.v19-sidebar-empty{color:#c4d1d7;font-size:11px;padding:8px}
+.main{padding:18px clamp(18px,3vw,64px) 54px;background:#fff;min-width:0}
+.topbar{display:flex;justify-content:flex-end;align-items:center;color:var(--v19-text);margin:0 0 15px;padding:0 0 10px;border-bottom:1px solid var(--v19-rule);min-height:37px}
+.topbar>div:first-child{display:none}
+.toolbar{gap:3px}
+.toolbar button,.toolbar label{color:#25647a!important;background:transparent!important;border:0!important;padding:6px 8px!important;border-radius:4px;font-size:11px!important;font-weight:650!important}
+.toolbar button:hover,.toolbar label:hover{background:#edf4f5!important}
+#content{width:100%;max-width:1600px}
+.v19-document{line-height:1.6}
+.v19-hero{padding:12px 0 23px;margin:0 0 7px;border-bottom:1px solid var(--v19-rule)}
+.v19-eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:10px;font-weight:800;color:var(--v19-accent);margin-bottom:6px}
+.v19-hero h1{font-size:clamp(28px,3vw,41px);line-height:1.14;letter-spacing:-.055em;font-weight:820;color:var(--v19-text);margin:0 0 11px}
+.v19-identity{font-size:13px;font-weight:600;color:#3c6074;margin-bottom:5px}
+.v19-address{font-size:13px;color:#637684}
+.v19-resume{font-size:14px;color:#344d60;line-height:1.7;margin:15px 0 10px;max-width:1230px;white-space:pre-line}
+.v19-actions{display:flex;align-items:center;flex-wrap:wrap;gap:15px;margin-top:15px}
+.v19-actions button,.v19-link{background:transparent!important;border:0!important;border-radius:0;color:#096e87!important;font-size:12px;font-weight:740;padding:0;text-decoration:underline;text-underline-offset:3px}
+.v19-indexline{color:#667988;font-size:11px;margin:0;padding:8px 0 12px}
+.v19-chapter{border-top:1px solid var(--v19-rule);padding:20px 0 22px;margin:0;scroll-margin-top:20px}
+.v19-chapter:first-of-type{border-top:0}
+.v19-chapter h2{font-size:18px;color:#21374a;margin:0 0 11px;letter-spacing:-.026em;line-height:1.32;font-weight:810}
+.v19-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:27px;row-gap:12px;margin:0}
+.v19-pair{min-width:0;padding:0}
+.v19-pair dt{font-size:10.5px;line-height:1.4;font-weight:700;color:var(--v19-muted);margin-bottom:3px}
+.v19-pair dd{margin:0;font-size:13px;color:#20394c;font-weight:500;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.v19-pair dd a{color:#0b7188;overflow-wrap:anywhere;text-decoration:underline}
+.v19-subset{margin:12px 0 7px;min-width:0}
+.v19-sublabel{font-size:12px;font-weight:790;color:#2b5369;margin:0 0 10px;letter-spacing:.007em}
+.v19-sublabel span{font-weight:500;color:#728593}
+.v19-subset>.v19-subset{padding-left:13px;border-left:1px solid #dce6e8}
+.v19-records{display:grid;grid-template-columns:1fr;gap:0}
+.v19-record{padding:10px 0 13px;margin:0;border-bottom:1px solid #e8edf0;min-width:0}
+.v19-record:last-child{border:0}
+.v19-record h4{font-size:13px;line-height:1.5;font-weight:770;color:#29485e;margin:0 0 7px}
+.v19-index{color:#758b9a;font-weight:550;margin-right:3px}
+.v19-record .v19-fields{row-gap:7px;column-gap:22px}
+.v19-record .v19-subset{margin:11px 0 4px}
+.v19-plainlist{margin:0;padding:0 0 0 17px;list-style:disc}
+.v19-plainlist li{font-size:13px;color:#20394c;line-height:1.7;overflow-wrap:anywhere;padding:0 0 7px 1px}
+.v19-plainlist a{color:#0b7188}
+.v19-tail{border-top:1px solid var(--v19-rule);color:#728391;font-size:11px;padding-top:15px;margin-top:5px}
+.v19-scroll{overflow:auto}
+.v19-table{min-width:720px;width:100%;border-collapse:collapse;background:transparent}
+.v19-table th{background:transparent;color:#708191;font-size:11px;font-weight:730;padding:11px 9px;border-bottom:1px solid var(--v19-rule)}
+.v19-table td{font-size:12px;color:#2c4050;padding:13px 9px;border-bottom:1px solid var(--v19-rule);vertical-align:middle}
+.v19-table td strong{font-size:13px}
+.v19-table td small{font-size:11px;color:#7b8994;display:block;line-height:1.4;margin-top:2px}
+.v19-table tr:hover td{background:#f5f9fa}
+@media(min-width:1650px){.v19-fields{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1120px){.v19-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:950px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative;overflow:visible;padding:10px 14px}.sidebar .brand p{display:none}.sidebar .brand{padding:2px 4px 9px}.sidebar .property-list{display:flex;gap:5px;overflow:auto}.v19-property{border:1px solid rgba(255,255,255,.15);border-radius:5px;min-width:140px;padding:7px}.v19-property.selected{padding-left:7px;border-left:1px solid rgba(255,255,255,.15)}.v19-property small{display:none}.main{padding:14px 18px}.sidebar .side-actions{max-width:340px}}
+@media(max-width:570px){.v19-fields{grid-template-columns:1fr;row-gap:9px}.v19-hero h1{font-size:27px}.v19-chapter{padding:15px 0}.v19-record{padding:10px 0}.topbar{justify-content:flex-start}.toolbar{justify-content:flex-start}.v19-hero{padding-top:4px}}
