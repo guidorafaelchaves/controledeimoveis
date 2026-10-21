@@ -1,6 +1,6 @@
 # Controle de Imóveis
 
-Gestor Patrimonial Imobiliário v18 para uso no GitHub Pages.
+Gestor Patrimonial Imobiliário v19 para uso no GitHub Pages.
 
 ## Página
 
@@ -28,3 +28,7 @@ A v18 não altera as chaves de armazenamento da v16/v17 (`gestorPatrimonialImove
 ## v18 — ficha contínua
 
 A apresentação v18 elimina a navegação por abas de imóvel e a maior parte dos cartões. A ficha é um documento único, com cadastro, unidades individualizadas, IPTU, finanças, titularidade, riscos, documentos, cronologia, auditoria e arquivo integral no fim. Campos desconhecidos aparecem como pendentes; o JSON integral e dados privados permanecem no armazenamento original. Para reversão de apresentação, consulte `backup-v17-2026-10-21-fluid-redesign`.
+
+## v19 — leitura dinâmica integral do JSON
+
+A página não depende mais de campos pré-definidos para exibir imóveis. Em cada ficha, o renderizador percorre dinamicamente todas as chaves do `sourceJson`, mostra os valores preenchidos (inclusive informações aninhadas, listas, histórico, arquivos, fontes e URLs) e complementa com os dados operacionais de topo que não são duplicatas exatas. Valores `0` e `false` do JSON original continuam visíveis como zero e “Não”; campos vazios ficam ocultos apenas na visualização, nunca nos arquivos nem nos backups. O app preserva o IndexedDB e LocalStorage existentes; a v18 foi mantida em `backup-v18-2026-10-21-before-dynamic-dossier`. Não publique backups ou JSONs contendo dados pessoais neste repositório público.
