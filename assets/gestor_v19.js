@@ -11,7 +11,7 @@ const OBJ = value => value !== null && typeof value === "object" && !Array.isArr
 const ARRAY = value => Array.isArray(value);
 const HAS = value => value !== null && value !== undefined && (!(typeof value==="string") || value.trim().length>0);
 const SIMPLE = value => !OBJ(value)&&!ARRAY(value);
-const nonempty = value => HAS(value)&&(!ARRAY(value)||value.length>0)&&(!OBJ(value)||Object.keys(value).length>0);
+function nonempty(value,depth=0){if(depth>24)return false;if(SIMPLE(value))return HAS(value);if(ARRAY(value))return value.some(x=>nonempty(x,depth+1));return Object.values(value).some(x=>nonempty(x,depth+1));}
 const glyph = /\b(iptu|irpf|icd|itcmd|cnd|cadimo|cnpj|cpf|cep|uf|pdf|dae|itr|car|ccir|pje|fii|url|id|m2)\b/gi;
 const dic = {"iptu":"IPTU","irpf":"IRPF","icd":"ICD","itcmd":"ITCMD","cnd":"CND","cadimo":"CADIMO","cnpj":"CNPJ","cpf":"CPF","cep":"CEP","uf":"UF","pdf":"PDF","dae":"DAE","itr":"ITR","car":"CAR","ccir":"CCIR","pje":"PJe","fii":"FII","url":"URL","id":"ID","m2":"m²"};
 function human(key){
@@ -137,8 +137,7 @@ function findEquivalentInSource(data,fingerprints=new Set(),depth=0){
 }
 function operationalBlocks(p){
  const entries=Object.entries(p).filter(([k,v])=>!OMIT_INTERNAL.has(k)&&k!=="sourceJson"&&nonempty(v));
- const primitive=entries.filter(([,v])=>SIMPLE(v) && (typeof v!=="number"||v!==0) &&
-    !["name","type","city","legalStatus","address","notes"].includes("") );
+ const primitive=entries.filter(([,v])=>SIMPLE(v) && (typeof v!=="number"||v!==0));
  // Retira repetição literal do título, do endereço e do resumo que já estão na faixa principal.
  const displayed=new Set([p.name,p.address,p.notes]);
  const simple=primitive.filter(([key,value])=>{
@@ -176,7 +175,6 @@ function selfCount(p){
  const source=OBJ(p.sourceJson)?p.sourceJson:{};
  const count=countLeaves(source);
  const groups=compactItems(source).length;
- const incomplete=[]; // campos vazios permanecem no JSON-fonte, nunca excluídos
  return '<p class="v19-indexline">'+groups+' grupos do documento · '+count+
   ' informações preenchidas no JSON original · Exibição contínua, sem abas e sem filtros de campos.</p>';
 }
