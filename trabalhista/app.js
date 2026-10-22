@@ -43,7 +43,7 @@ let competence=thisMonth(),page="painel",allRecords=false,filterPerson="",filter
 const $=s=>document.querySelector(s);
 function esc(v){return String(v===null||v===undefined?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function money(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v)||0)}
-function shortDate(s){if(!s)return "Não informado";let a=String(s).split("-");return a.length===3?a[2]+"/"+a[1]+"/"+a[0]:esc(s)}
+function shortDate(s){if(!s)return "Não informado";let a=String(s).split("-");return a.length===3?esc(a[2]+"/"+a[1]+"/"+a[0]):esc(s)}
 function mon(s){if(!s)return "";let a=s.split("-");return a[1]+"/"+a[0]}
 function txt(s){return esc(s).replace(/\n/g,"<br>")}
 function regName(x){return (regimeOptions.find(r=>r[0]===x)||regimeOptions[0])[1]}
@@ -178,7 +178,7 @@ function renderBackup(){
 function modal(title,body){$("#modal-title").textContent=title;$("#modal-body").innerHTML=body;$("#modal").hidden=false;document.body.style.overflow="hidden"}
 function closeModal(){$("#modal").hidden=true;$("#modal-body").innerHTML="";document.body.style.overflow=""}
 function opt(list,value){return list.map(x=>'<option value="'+esc(x[0])+'" '+(value===x[0]?"selected":"")+'>'+esc(x[1])+'</option>').join("")}
-function field(label,name,value,type,extra){return '<label class="field">'+label+'<input name="'+name+'" type="'+(type||"text")+'" value="'+esc(value||"")+'" '+(extra||"")+'></label>'}
+function field(label,name,value,type,extra){return '<label class="field">'+label+'<input name="'+name+'" type="'+(type||"text")+'" value="'+esc(value===null||value===undefined?"":value)+'" '+(extra||"")+'></label>'}
 function openPerson(pid){
  const p=pid?db.people.find(q=>q.id===pid):null;
  modal(p?"Editar trabalhador":"Novo trabalhador",'<form id="form-person" class="form-grid">'+field("Nome","name",p&&p.name,"text","required maxlength=90")+
