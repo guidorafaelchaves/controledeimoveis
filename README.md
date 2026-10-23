@@ -32,3 +32,19 @@ A apresentação v18 elimina a navegação por abas de imóvel e a maior parte d
 ## v19 — leitura dinâmica integral do JSON
 
 A página não depende mais de campos pré-definidos para exibir imóveis. Em cada ficha, o renderizador percorre dinamicamente todas as chaves do `sourceJson`, mostra os valores preenchidos (inclusive informações aninhadas, listas, histórico, arquivos, fontes e URLs) e complementa com os dados operacionais de topo que não são duplicatas exatas. Valores `0` e `false` do JSON original continuam visíveis como zero e “Não”; campos vazios ficam ocultos apenas na visualização, nunca nos arquivos nem nos backups. O app preserva o IndexedDB e LocalStorage existentes; a v18 foi mantida em `backup-v18-2026-10-21-before-dynamic-dossier`. Não publique backups ou JSONs contendo dados pessoais neste repositório público.
+
+
+## v20 — controle financeiro por imóvel e carteira
+
+Camada aditiva em assets/finance_v20.js e assets/finance_v20.css, sem remover as fichas v19:
+
+- **Finanças da carteira** na barra lateral: receitas efetivamente recebidas, despesas pagas, resultados, contas a receber/pagar, contratos mensais, histórico de doze competências e desempenho de cada imóvel.
+- **Financeiro do imóvel** ao abrir uma ficha: aba própria com métricas, lançamentos, contratos de aluguel por unidade e edição/exclusão de registros.
+- Cadastro de receitas, despesas, categoria, unidade, competência, vencimento, data de baixa e situação; contratos com início/fim, aluguel mensal e dia de vencimento.
+- Exportação CSV dos lançamentos (com proteção contra fórmulas de planilha) e inclusão dos novos registros nos backups completos existentes.
+- **Importante:** aluguel contratado não vira automaticamente receita recebida; pendências não são pagamentos; o módulo não converte automaticamente valores legados em recebimentos. O painel agrupa valores realizados pela competência declarada. Não substitui a conciliação bancária nem as obrigações tributárias.
+- Caução deve ser controlada como obrigação/garantia, e não como aluguel ganho.
+- Dados do módulo salvos na propriedade, preservados no IndexedDB e no backup. O resumo LocalStorage também passou a incluir o campo financeiro para recuperação básica.
+- Nada do cadastro, das receitas, dos inquilinos ou dos recibos é enviado ao código público: o repositório contém apenas a interface. Use Central de backup → Baixar backup completo.
+
+**Cópia de recuperação anterior à v20:** branch backup-v19-2026-10-23-before-finance-v20.
