@@ -4,7 +4,7 @@
    Cada bloco e cada campo não vazio do JSON-fonte é apresentado na ficha. */
 (function(){
 "use strict";
-const OMIT_INTERNAL = new Set(["sourceJson","richJson","originalJson","texto_original_importado"]);
+const OMIT_INTERNAL = new Set(["sourceJson","richJson","originalJson","texto_original_importado","financeV20"]);
 const STRING_ALIAS = new Set(["name","type","city","legalStatus","address","notes"]);
 const E = value => esc(value === null || value === undefined ? "" : String(value));
 const OBJ = value => value !== null && typeof value === "object" && !Array.isArray(value);
