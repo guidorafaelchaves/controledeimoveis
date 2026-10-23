@@ -71,7 +71,7 @@ function kpis(f,contracts){
  return '<div class="f20-kpis">'+
  stat("Recebido",money(f.received),"Receitas efetivamente lançadas","f20-income")+
  stat("Pago",money(f.spent),"Despesas efetivamente lançadas","f20-outcome")+
- stat("Resultado de caixa",money(f.net),"Recebido − pago",classFor(f.net))+
+ stat("Resultado realizado",money(f.net),"Recebido − pago na competência",classFor(f.net))+
  stat("A receber",money(f.receivable),"Lançamentos pendentes","")+
  stat("A pagar",money(f.payable),"Lançamentos pendentes","")+
  stat("Aluguéis contratados",money(contracts),"Referência mensal; não é recebimento","")+
@@ -134,7 +134,7 @@ function propertyContent(p){
  return '<div class="f20-root">'+tabBar(true)+renderFinanceHeader("Resultados financeiros · "+clean(p.name),"Controle financeiro independente dos dados registrais e documentais do imóvel.",true)+
  kpis(f,f.contractRent)+'<div class="f20-grid">'+summaryBars(all,month)+rentTable(p)+'</div>'+ledgerTable(all,false)+
  (legacy?'<div class="f20-footnote">Existem '+legacy+' lançamentos na estrutura financeira anterior. Eles continuam preservados no dossiê; não são classificados como pagos sem conciliação.</div>':"")+
- '<div class="f20-footnote">Resultado de caixa = receitas marcadas como recebidas − despesas marcadas como pagas. Gastos com obras e investimentos também aparecem nas saídas de caixa, mas devem ser diferenciados na categoria.</div></div>';
+ '<div class="f20-footnote">Resultado realizado da competência = receitas marcadas como recebidas − despesas marcadas como pagas. Gastos com obras e investimentos também aparecem nas saídas de caixa, mas devem ser diferenciados na categoria.</div></div>';
 }
 function appendNavigation(target){
  const root=document.getElementById("content");if(!root)return;
@@ -309,5 +309,5 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")closeDialog(
 document.addEventListener("click",function(e){if(e.target.id==="f20-overlay")closeDialog();});
 const side=document.querySelector(".side-actions");
 if(side&&!side.querySelector('[data-f20="global"]'))side.insertAdjacentHTML("beforeend",'<button class="f20-side" data-f20="global">▣ Finanças da carteira</button>');
-try{render();}catch(e){console.error("Financeiro v20: montagem de interface não concluída; estado anterior preservado.",e);}
+try{const brand=document.querySelector(".brand h1");if(brand)brand.textContent="Controle de Imóveis v20";render();}catch(e){console.error("Financeiro v20: montagem de interface não concluída; estado anterior preservado.",e);}
 })();
