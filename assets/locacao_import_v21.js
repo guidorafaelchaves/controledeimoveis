@@ -9,6 +9,24 @@ const fmt=s=>/^\d{4}-\d{2}-\d{2}$/.test(String(s||""))?String(s).slice(8)+"/"+St
 const arr=v=>Array.isArray(v)?v:[];
 const uidLocal=()=>typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():"imovel-"+Date.now()+"-"+Math.random().toString(36).slice(2);
 function currentProperty(){return typeof state!=="undefined"&&arr(state.properties).find(p=>p.id===state.selectedId);}
+function leaseDetails(l){
+ const pairs=[
+ ["CPF do locatário",l.tenantCpf],["RG",l.tenantRg],["Profissão",l.tenantProfession],
+ ["Estado civil",l.tenantMaritalStatus],["Telefone/WhatsApp",l.tenantPhone],
+ ["Residência do locatário",l.tenantAddress],["Locador",l.landlord],
+ ["Contato do locador",l.landlordPhone],["E-mail do locador",l.landlordEmail],
+ ["Assinatura prevista",fmt(l.signedAt)],["Entrega das chaves",fmt(l.keysDelivery)],
+ ["Primeiro vencimento",fmt(l.firstDueDate)],["Último vencimento",fmt(l.lastDueDate)],
+ ["Boletos",l.rentPaymentMethod],["Total nominal de aluguéis",money(l.nominalRentTotal)],
+ ["Reajuste",l.rentAdjustment],["IPTU",l.iptu],["Contas de consumo",l.utilities],
+ ["Taxas municipais",l.municipalFees],["Seguro contra incêndio",l.fireInsurance],
+ ["Vistoria",l.inspection],["Observações",l.notes]
+ ].filter(x=>x[1]!==undefined&&x[1]!==null&&x[1]!=="");
+ return '<details style="margin:9px 0"><summary style="cursor:pointer;font-weight:700;color:#17459a">Ver todos os dados contratuais</summary>'+
+ '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:10px">'+
+ pairs.map(([key,value])=>'<div style="font-size:12px;background:#fff;border:1px solid #dde5f0;border-radius:8px;padding:9px"><b>'+E(key)+'</b><div style="margin-top:3px;overflow-wrap:anywhere">'+E(value)+'</div></div>').join("")+
+ '</div></details>';
+}
 function inject(){
  const side=document.querySelector(".side-actions");
  if(side&&!side.querySelector('[data-ar-action="import"]')){
@@ -36,6 +54,7 @@ function inject(){
  (count?E(count+" aluguéis previstos · "+paid+" baixados; sem baixa automática"):"Sem lançamentos programados")+
  (dep?'<div>Compensação da caução no encerramento, após acerto. Comprovante da caução: '+E(dep.receiptAttachmentStatus||"a conferir")+'.</div>':"")+
  '</div>'+
+ leaseDetails(l)+
  (l.agreementPdf?.base64?'<button type="button" data-ar-action="pdf" data-id="'+E(l.id)+'" class="f20-btn f20-accent">Abrir contrato PDF</button>':"")+
  '</div>';
  }).join("");
@@ -114,7 +133,7 @@ function openPdf(id){
   const binary=atob(doc.base64),bytes=new Uint8Array(binary.length);
   for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
   const url=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
-  const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";a.download=doc.name||"contrato.pdf";document.body.appendChild(a);a.click();a.remove();
+  const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60000);
  }catch(err){alert("Falha ao abrir o PDF: "+err.message);}
 }
