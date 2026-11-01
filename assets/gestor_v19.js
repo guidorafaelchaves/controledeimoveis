@@ -4,7 +4,7 @@
    Cada bloco e cada campo não vazio do JSON-fonte é apresentado na ficha. */
 (function(){
 "use strict";
-const OMIT_INTERNAL = new Set(["sourceJson","richJson","originalJson","texto_original_importado","financeV20"]);
+const OMIT_INTERNAL = new Set(["sourceJson","richJson","originalJson","texto_original","texto_original_importado","rawText","financeV20"]);
 const STRING_ALIAS = new Set(["name","type","city","legalStatus","address","notes"]);
 const E = value => esc(value === null || value === undefined ? "" : String(value));
 const OBJ = value => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -106,6 +106,9 @@ function sourceBlocks(p){
  let groups=[];
  const scalarTop=[],nestedTop=[];
  for(const [key,value] of compactItems(src)){
+   // Conteúdo bruto continua no backup e na área técnica, não na tela do operador.
+   if(/^(texto_original|texto_original_importado|raw_?text|raw_?json|original_?text)$/i.test(key))continue;
+   if(src.format==="controle_imoveis_locacao_v21"&&["format","version","target","lease","transactions"].includes(key))continue;
    if(SIMPLE(value))scalarTop.push([key,value]);else nestedTop.push([key,value]);
  }
  // Cada chave do JSON forma sua própria seção, e não uma categoria imposta pelo aplicativo.
