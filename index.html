@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Controle de Imóveis v20 — Dossiês e Finanças</title>
+<title>Controle de Imóveis v22 — Operação e Finanças</title>
 <link rel="stylesheet" href="assets/finance_v20.css?v=20.0.20261023">
 <style>
 :root{--bg:#07111f;--nav:#0b1729;--nav2:#10213a;--card:#fff;--soft:#f4f7fb;--line:#dbe3ee;--text:#122033;--muted:#66768b;--blue:#2563eb;--blue2:#1d4ed8;--green:#16803c;--amber:#c66a05;--red:#c92a2a;--purple:#6d28d9;--cyan:#067b96;--shadow:0 18px 50px rgba(1,13,31,.14);--radius:18px}
@@ -16,7 +16,7 @@
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><h1>Gestor Patrimonial v17</h1><p>Central imobiliária jurídico-financeira com consolidação incremental por JSON, auditoria de fontes, contradições e backup ampliado.</p></div>
+  <div class="brand"><h1>Controle de Imóveis v22</h1><p>Central imobiliária jurídico-financeira com consolidação incremental por JSON, auditoria de fontes, contradições e backup ampliado.</p></div>
   <div class="side-actions"><button class="primary" onclick="openImport()">Importar dados</button><button class="darkbtn" onclick="showPortfolio()">Visão geral</button></div>
   <input id="search" class="searchbox" placeholder="Buscar imóvel, matrícula, cidade..." oninput="renderSidebar()" />
   <div class="filters"><select id="filterStatus" onchange="renderSidebar()"><option value="">Todos os status</option></select><select id="filterType" onchange="renderSidebar()"><option value="">Todos os tipos</option></select></div>
@@ -322,4 +322,5 @@ hydrateFromIndexedDB();
 <script src="assets/gestor_v19.js?v=19.0.20261021" defer></script>
 <script src="assets/finance_v20.js?v=20.0.20261023" defer></script>
 <script src="assets/locacao_import_v21.js?v=21.0.20261030" defer></script>
+<script src="assets/operador_v22.js?v=22.0.20261101" defer></script>
 </body></html>
