@@ -212,12 +212,12 @@ function viewPortfolio(){
 renderProperty=function(p){
  if(!p){showPortfolio();return;}
  document.getElementById("title").textContent=p.name||"Dossiê patrimonial";
- document.getElementById("subtitle").textContent="Gestor Patrimonial v19";
+ document.getElementById("subtitle").textContent="Controle de Imóveis v22";
  document.getElementById("content").innerHTML=viewProperty(p);
 };
 renderPortfolio=function(){
  document.getElementById("title").textContent="Controle de Imóveis";
- document.getElementById("subtitle").textContent="Gestor Patrimonial v19";
+ document.getElementById("subtitle").textContent="Controle de Imóveis v22";
  document.getElementById("content").innerHTML=viewPortfolio();
 };
 renderSidebar=function(){
